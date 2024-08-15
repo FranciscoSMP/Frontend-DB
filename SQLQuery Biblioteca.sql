@@ -1,0 +1,129 @@
+CREATE DATABASE Biblioteca;
+
+USE Biblioteca;
+
+CREATE TABLE dbo.Pais(
+Id_Pais INT PRIMARY KEY IDENTITY(1,1),
+Nombre VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE dbo.Departamento(
+Id_Departamento INT PRIMARY KEY IDENTITY(1,1),
+Nombre VARCHAR(50) NOT NULL,
+Id_Pais INT NOT NULL,
+FOREIGN KEY (Id_Pais) REFERENCES dbo.Pais(Id_Pais)
+ON DELETE CASCADE
+ON UPDATE CASCADE
+);
+
+CREATE TABLE dbo.Municipio(
+Id_Municipio INT PRIMARY KEY IDENTITY(1,1),
+Nombre VARCHAR(50) NOT NULL,
+Id_Departamento INT NOT NULL,
+FOREIGN KEY (Id_Departamento) REFERENCES dbo.Departamento(Id_Departamento)
+ON DELETE CASCADE
+ON UPDATE CASCADE
+);
+
+CREATE TABLE dbo.Autor(
+Id_Autor INT PRIMARY KEY IDENTITY(1,1),
+Primer_Nombre VARCHAR(50) NOT NULL,
+Segundo_Nombre VARCHAR(50) NULL,
+Primer_Apellido VARCHAR(50) NOT NULL,
+Segundo_Apellido VARCHAR(50) NULL,
+Id_Pais INT NOT NULL,
+FOREIGN KEY (Id_Pais) REFERENCES dbo.Pais(Id_Pais)
+ON DELETE CASCADE
+ON UPDATE CASCADE
+);
+
+CREATE TABLE dbo.Editorial(
+Id_Editorial INT PRIMARY KEY IDENTITY(1,1),
+Nombre VARCHAR(50) NOT NULL,
+Id_Pais INT NOT NULL,
+FOREIGN KEY (Id_Pais) REFERENCES dbo.Pais(Id_Pais)
+ON DELETE CASCADE
+ON UPDATE CASCADE
+);
+
+CREATE TABLE dbo.Libro(
+Id_Libro INT PRIMARY KEY IDENTITY(1,1),
+Titulo VARCHAR(200) NOT NULL,
+Fecha_Publicacion DATE NOT NULL,
+ISBN VARCHAR(20) NOT NULL,
+Id_Editorial INT NOT NULL,
+FOREIGN KEY (Id_Editorial) REFERENCES dbo.Editorial(Id_Editorial)
+ON DELETE CASCADE
+ON UPDATE CASCADE
+);
+
+CREATE TABLE dbo.Categoria(
+Id_Categoria INT PRIMARY KEY IDENTITY(1,1),
+Nombre VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE dbo.Miembro(
+Id_Miembro INT PRIMARY KEY IDENTITY(1,1),
+Primer_Nombre VARCHAR(50) NOT NULL,
+Segundo_Nombre VARCHAR(50) NULL,
+Primer_Apellido VARCHAR(50) NOT NULL,
+Segundo_Apellido VARCHAR(50) NULL,
+Telefono VARCHAR(20) NOT NULL,
+Fecha_Registro DATE NOT NULL,
+Id_Municipio INT NOT NULL,
+FOREIGN KEY (Id_Municipio) REFERENCES dbo.Municipio(Id_Municipio)
+ON DELETE CASCADE
+ON UPDATE CASCADE
+);
+
+CREATE TABLE dbo.Empleado(
+Id_Empleado INT PRIMARY KEY IDENTITY(1,1),
+Primer_Nombre VARCHAR(50) NOT NULL,
+Segundo_Nombre VARCHAR(50) NULL,
+Primer_Apellido VARCHAR(50) NOT NULL,
+Segundo_Apellido VARCHAR(50) NULL,
+Puesto VARCHAR(50) NOT NULL,
+Fecha_Contratacion DATE NOT NULL
+);
+
+CREATE TABLE dbo.Prestamo(
+Id_Prestamo INT PRIMARY KEY IDENTITY(1,1),
+Id_Miembro INT NOT NULL,
+Id_Empleado INT NOT NULL,
+Fecha_Prestamo DATE NOT NULL,
+Fecha_Devolucion DATE NOT NULL,
+FOREIGN KEY (Id_Miembro) REFERENCES dbo.Miembro(Id_Miembro)
+ON DELETE CASCADE
+ON UPDATE CASCADE,
+FOREIGN KEY (Id_Empleado) REFERENCES dbo.Empleado(Id_Empleado)
+ON DELETE CASCADE
+ON UPDATE CASCADE
+);
+
+CREATE TABLE dbo.Libro_Autor(
+Id_Libro_Autor INT PRIMARY KEY IDENTITY(1,1),
+Id_Libro INT NOT NULL,
+Id_Autor INT NOT NULL,
+FOREIGN KEY (Id_Libro) REFERENCES dbo.Libro(Id_Libro),
+FOREIGN KEY (Id_Autor) REFERENCES dbo.Autor(Id_Autor)
+);
+
+CREATE TABLE dbo.Libro_Categoria(
+Id_Libro_Categoria INT PRIMARY KEY IDENTITY(1,1),
+Id_Libro INT NOT NULL,
+Id_Categoria INT NOT NULL,
+FOREIGN KEY (Id_Libro) REFERENCES dbo.Libro(Id_Libro)
+ON DELETE CASCADE
+ON UPDATE CASCADE,
+FOREIGN KEY (Id_Categoria) REFERENCES dbo.Categoria(Id_Categoria)
+ON DELETE CASCADE
+ON UPDATE CASCADE
+);
+
+CREATE TABLE dbo.Detalle_Prestamo(
+Id_Detalle_Prestamo INT PRIMARY KEY IDENTITY(1,1),
+Id_Prestamo INT NOT NULL,
+Id_Libro INT NOT NULL,
+FOREIGN KEY (Id_Prestamo) REFERENCES dbo.Prestamo(Id_Prestamo),
+FOREIGN KEY (Id_Libro) REFERENCES dbo.Libro(Id_Libro)
+);
