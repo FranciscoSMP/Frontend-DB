@@ -1,31 +1,37 @@
-const mysqlConnection = require('../db/mysqlConnection');
-const oracleConnection = require('../db/oracleConnection');
-const sqlServerConnection = require('../db/sqlServerConnection');
+const bibliotecaModel = require('../models/bibliotecaModel');
 
 exports.home = (req, res) => {
     res.render('home');
 };
 
-exports.insertData = async (req, res) => {
-    const { nombrePais, nombreDepartamento, nombreMunicipio } = req.body;
+exports.autor = (req, res) => {
+    res.render('Autor');
+};
+
+exports.libros = (req, res) => {
+    res.render('tablaLibros');
+};
+
+exports.guardarAutor = async (req, res) => {
+    const { Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Id_Pais } = req.body;
 
     try {
-        // MySQL
-        await mysqlConnection.execute('INSERT INTO Pais (Nombre) VALUES (?)', [nombrePais]);
+        await bibliotecaModel.guardarAutor({ Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Id_Pais });
+        res.redirect('/tabla/Autor');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al guardar el autor');
+    }
+};
 
-        // Oracle
-        const oracleConn = await oracleConnection.connect();
-        await oracleConn.execute('INSERT INTO Pais (Nombre) VALUES (:nombre)', [nombrePais]);
-        await oracleConn.commit();
-        oracleConn.close();
+exports.guardarLibro = async (req, res) => {
+    const { Primer_Nombre, Primer_Apellido, Id_Pais } = req.body;
 
-        // SQL Server
-        const sqlConn = await sqlServerConnection.poolPromise;
-        await sqlConn.request().query(`INSERT INTO dbo.Pais (Nombre) VALUES ('${nombrePais}')`);
-
-        res.redirect('/');
-    } catch (err) {
-        console.error('Error inserting data', err);
-        res.status(500).send('Error inserting data');
+    try {
+        await bibliotecaModel.guardarLibro({ Primer_Nombre, Primer_Apellido, Id_Pais });
+        res.redirect('/tabla/libros');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al guardar el libro');
     }
 };
