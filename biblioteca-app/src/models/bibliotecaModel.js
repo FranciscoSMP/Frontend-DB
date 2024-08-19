@@ -4,15 +4,26 @@ const sqlServerConnection = require('../db/sqlServerConnection');
 
 exports.guardarAutor = async ({ Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Id_Pais }) => {
     
-    //const query = 'INSERT INTO autor (Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Id_Pais) VALUES (?, ?, ?, ?, ?)';
-    
-    //await mysqlConnection.query(query, [Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Id_Pais]);
+    const query = `INSERT INTO autor (Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Id_Pais) VALUES ('${Primer_Nombre}', '${Segundo_Nombre}', '${Primer_Apellido}', '${Segundo_Apellido}', ${Id_Pais})`;
 
-    const query = `INSERT INTO dbo.Autor (Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Id_Pais) VALUES ('${Primer_Nombre}', '${Segundo_Nombre}', '${Primer_Apellido}', '${Segundo_Apellido}', ${Id_Pais})`;
+    await mysqlConnection.query(query, [Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Id_Pais]);
 
-    // Usar SQL Server
     const sqlConn = await sqlServerConnection.poolPromise;
     await sqlConn.request().query(query);
+
+    const oracleConn = await oracleConnection.connect();
+        await oracleConn.execute(
+            `INSERT INTO autor (Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Id_Pais) VALUES (:Primer_Nombre, :Segundo_Nombre, :Primer_Apellido, :Segundo_Apellido, :Id_Pais)`,
+            {
+                Primer_Nombre: Primer_Nombre,
+                Segundo_Nombre: Segundo_Nombre,
+                Primer_Apellido: Primer_Apellido,
+                Segundo_Apellido: Segundo_Apellido,
+                Id_Pais: Id_Pais
+            },
+            { autoCommit: true }
+        );
+        await oracleConn.close();
 
 };
 
