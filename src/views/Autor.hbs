@@ -9,12 +9,12 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/styles.css">
 </head>
-<body class="bg-light">
-    <div class="container mt-5">
-        <h1 class="text-center text-primary mb-4">Tabla Autor</h1>
+<body>
+    <div class="container mt-5 bg-custom">
+        <h1 class="text-center text-custom mb-4">Tabla Autor</h1>
         
         <!-- Formulario con Bootstrap -->
-        <form action="/guardar/autor" method="POST" class="bg-white p-4 rounded shadow-sm">
+        <form action="/guardar/autor" method="POST" class="bgform-custom p-4 rounded shadow-sm">
             <div class="mb-3">
                 <label for="Primer_Nombre" class="form-label">Primer Nombre</label>
                 <input type="text" class="form-control" id="Primer_Nombre" name="Primer_Nombre" required>
@@ -40,7 +40,7 @@
                 <input type="text" class="form-control" id="Id_Pais" name="Id_Pais" required>
             </div>
             <center>
-                <button type="submit" class="btn btn-primary">Guardar Autor</button>
+                <button type="submit" class="btn btn-success">Guardar Autor</button>
                 <a href="/home" class="btn btn-secondary" role="button">Inicio</a>
             </center>
            
