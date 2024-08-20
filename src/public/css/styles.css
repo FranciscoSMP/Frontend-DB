@@ -1,15 +1,11 @@
 body {
     font-family: 'Arial', sans-serif;
+    background-color:rgba(153, 205, 50, 0.150);
 }
 
 h2 {
     font-weight: bold;
     text-transform: uppercase;
-}
-
-a:hover {
-    color: #0d6efd !important; /* Cambia el color del texto al pasar el mouse */
-    transition: color 0.3s ease-in-out;
 }
 
 .menu ul {
@@ -26,6 +22,14 @@ a:hover {
 }
 
 .list-group-item:hover {
-    background-color: #e9ecef;
+    background-color:rgb(235, 235, 235);
     cursor: pointer;
+}
+
+.bg-custom {
+    background-color:rgba(153, 205, 50, 0.100);
+}
+
+.text-custom {
+    color:rgb(0, 100, 0);
 }

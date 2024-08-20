@@ -40,7 +40,51 @@ exports.guardarCategoria = async ({ Nombre }) => {
         await oracleConn.execute(
             `INSERT INTO categoria (Nombre) VALUES (:Nombre)`,
             {
+                Nombre: Nombre
+            },
+            { autoCommit: true }
+        );
+        await oracleConn.close();
+
+};
+
+exports.guardarDepartamento = async ({ Nombre, Id_Pais }) => {
+    
+    const query = `INSERT INTO departamento (Nombre, Id_Pais) VALUES ('${Nombre}', ${Id_Pais})`;
+
+    await mysqlConnection.query(query, [Nombre, Id_Pais]);
+
+    const sqlConn = await sqlServerConnection.poolPromise;
+    await sqlConn.request().query(query);
+
+    const oracleConn = await oracleConnection.connect();
+        await oracleConn.execute(
+            `INSERT INTO departamento (Nombre, Id_Pais) VALUES (:Nombre, :Id_Pais)`,
+            {
                 Nombre: Nombre,
+                Id_Pais: Id_Pais
+            },
+            { autoCommit: true }
+        );
+        await oracleConn.close();
+
+};
+
+exports.guardarEditorial = async ({ Nombre, Id_Pais }) => {
+    
+    const query = `INSERT INTO editorial (Nombre, Id_Pais) VALUES ('${Nombre}', ${Id_Pais})`;
+
+    await mysqlConnection.query(query, [Nombre, Id_Pais]);
+
+    const sqlConn = await sqlServerConnection.poolPromise;
+    await sqlConn.request().query(query);
+
+    const oracleConn = await oracleConnection.connect();
+        await oracleConn.execute(
+            `INSERT INTO editorial (Nombre, Id_Pais) VALUES (:Nombre, :Id_Pais)`,
+            {
+                Nombre: Nombre,
+                Id_Pais: Id_Pais
             },
             { autoCommit: true }
         );

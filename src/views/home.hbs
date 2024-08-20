@@ -14,20 +14,26 @@
     <!-- Animate.css (para animaciones simples) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 </head>
-<body class="bg-light">
+<body>
     {{> header }}
 
     <!-- Main Container -->
     <div class="container mt-5">
         <!-- Sección Menu -->
-        <div class="menu bg-white shadow-sm p-4 rounded animate__animated animate__fadeIn">
-            <h2 class="text-center text-primary">Base de Datos Biblioteca</h2>
+        <div class="menu bg-custom shadow-sm p-4 rounded animate__animated animate__fadeIn">
+            <h2 class="text-center text-custom">Base de Datos Biblioteca</h2>
             <ul class="list-group mt-3">
                 <a href="/tabla/autor" class="list-group-item list-group-item-action">
                     Autor
                 </a>
                 <a href="/tabla/categoria" class="list-group-item list-group-item-action">
                     Categoria
+                </a>
+                <a href="/tabla/departamento" class="list-group-item list-group-item-action">
+                    Departamento
+                </a>
+                <a href="/tabla/editorial" class="list-group-item list-group-item-action">
+                    Editorial
                 </a>
             </ul>
         </div>

@@ -11,16 +11,18 @@
 </head>
 <body class="bg-light">
     <div class="container mt-5">
-        <h1 class="text-center text-primary mb-4">Tabla Categoría</h1>
+        <h1 class="text-center text-primary mb-4">Tabla Editorial</h1>
         
         <!-- Formulario con Bootstrap -->
-        <form action="/guardar/categoria" method="POST" class="bg-white p-4 rounded shadow-sm">
+        <form action="/guardar/editorial" method="POST" class="bg-white p-4 rounded shadow-sm">
             <div class="mb-3">
-                <label for="Nombre" class="form-label">Nombre Categoría</label>
+                <label for="Nombre" class="form-label">Nombre Editorial</label>
                 <input type="text" class="form-control" id="Nombre" name="Nombre" required>
+                <label for="Id_Pais" class="form-label">ID Pais</label>
+                <input type="text" class="form-control" id="Id_Pais" name="Id_Pais" required>
             </div>
             <center>
-                <button type="submit" class="btn btn-primary">Guardar Categoría</button>
+                <button type="submit" class="btn btn-primary">Guardar Editorial</button>
                 <a href="/home" class="btn btn-secondary" role="button">Inicio</a>
             </center>
         </form>
