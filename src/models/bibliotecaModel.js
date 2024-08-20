@@ -27,16 +27,23 @@ exports.guardarAutor = async ({ Primer_Nombre, Segundo_Nombre, Primer_Apellido, 
 
 };
 
-exports.guardarLibro = async ({ Primer_Nombre, Primer_Apellido, Id_Pais }) => {
-    // Ejemplo para MySQL, puedes replicar esto para Oracle y SQL Server
-    const query = 'INSERT INTO autor (Primer_Nombre, Primer_Apellido, Id_Pais) VALUES (?, ?, ?)';
+exports.guardarCategoria = async ({ Nombre }) => {
     
-    // Insertar en MySQL
-    await mysqlConnection.query(query, [Primer_Nombre, Primer_Apellido, Id_Pais]);
-    
-    // Insertar en Oracle (con sintaxis adecuada para Oracle)
-    // await oracleConnection.execute(query, [titulo, autor, categoria, editorial, anio]);
-    
-    // Insertar en SQL Server (con sintaxis adecuada para SQL Server)
-    // await sqlServerConnection.query(query, [titulo, autor, categoria, editorial, anio]);
+    const query = `INSERT INTO categoria (Nombre) VALUES ('${Nombre}')`;
+
+    await mysqlConnection.query(query, [Nombre]);
+
+    const sqlConn = await sqlServerConnection.poolPromise;
+    await sqlConn.request().query(query);
+
+    const oracleConn = await oracleConnection.connect();
+        await oracleConn.execute(
+            `INSERT INTO categoria (Nombre) VALUES (:Nombre)`,
+            {
+                Nombre: Nombre,
+            },
+            { autoCommit: true }
+        );
+        await oracleConn.close();
+
 };

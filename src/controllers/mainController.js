@@ -8,8 +8,8 @@ exports.autor = (req, res) => {
     res.render('Autor');
 };
 
-exports.libros = (req, res) => {
-    res.render('tablaLibros');
+exports.categoria = (req, res) => {
+    res.render('Categoria');
 };
 
 exports.guardarAutor = async (req, res) => {
@@ -24,14 +24,14 @@ exports.guardarAutor = async (req, res) => {
     }
 };
 
-exports.guardarLibro = async (req, res) => {
-    const { Primer_Nombre, Primer_Apellido, Id_Pais } = req.body;
+exports.guardarCategoria= async (req, res) => {
+    const { Nombre } = req.body;
 
     try {
-        await bibliotecaModel.guardarLibro({ Primer_Nombre, Primer_Apellido, Id_Pais });
-        res.redirect('/tabla/libros');
+        await bibliotecaModel.guardarCategoria({ Nombre });
+        res.redirect('/tabla/categoria');
     } catch (error) {
         console.error(error);
-        res.status(500).send('Error al guardar el libro');
+        res.status(500).send('Error al guardar la categoria');
     }
 };
