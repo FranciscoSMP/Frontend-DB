@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+    <div class="container mt-5 bg-custom">
+        <h1 class="text-center text-custom mb-4">Tabla Miembro</h1>
+
+        <!-- Formulario con Bootstrap -->
+        <form action="/guardar/miembro" method="POST" class="form p-4 rounded shadow-sm">
+            <div class="mb-3">
+                <label for="Primer_Nombre" class="form-label">Primer Nombre</label>
+                <input type="text" class="form-control" id="Primer_Nombre" name="Primer_Nombre" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="Segundo_Nombre" class="form-label">Segundo Nombre</label>
+                <input type="text" class="form-control" id="Segundo_Nombre" name="Segundo_Nombre" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="Primer_Apellido" class="form-label">Primer Apellido</label>
+                <input type="text" class="form-control" id="Primer_Apellido" name="Primer_Apellido" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="Segundo_Apellido" class="form-label">Segundo Apellido</label>
+                <input type="text" class="form-control" id="Segundo_Apellido" name="Segundo_Apellido" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="Telefono" class="form-label">Teléfono</label>
+                <input type="text" class="form-control" id="Telefono" name="Telefono" required>
+            </div>
+            <div class="mb-3">
+                <label for="Fecha_Registro" class="form-label">Fecha de Registro</label>
+                <input type="date" class="form-control" id="Fecha_Registro" name="Fecha_Registro" required>
+            </div>
+            <div class="mb-3">
+                <label for="Id_Municipio" class="form-label">Municipio</label>
+                <input type="text" class="form-control" id="Id_Municipio" name="Id_Municipio" required>
+            </div>
+            <center>
+                <button type="submit" class="btn btn-success">Guardar Empleado</button>
+                <a href="/home" class="btn btn-secondary" role="button">Inicio</a>
+            </center>
+
+        </form>
+    </div>
+
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

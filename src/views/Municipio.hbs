@@ -11,18 +11,23 @@
 </head>
 <body>
     <div class="container mt-5 bg-custom">
-        <h1 class="text-center text-custom mb-4">Tabla Categoría</h1>
+        <h1 class="text-center text-custom mb-4">Tabla Municipio</h1>
         
         <!-- Formulario con Bootstrap -->
-        <form action="/guardar/categoria" method="POST" class="form p-4 rounded shadow-sm">
+        <form action="/guardar/municipio" method="POST" class="form p-4 rounded shadow-sm">
             <div class="mb-3">
-                <label for="Nombre" class="form-label">Nombre Categoría</label>
+                <label for="Nombre" class="form-label">Nombre</label>
                 <input type="text" class="form-control" id="Nombre" name="Nombre" required>
             </div>
+            <div class="mb-3">
+                <label for="Id_Departamento" class="form-label">ID Departamento</label>
+                <input type="text" class="form-control" id="Id_Departamento" name="Id_Departamento" required>
+            </div>
             <center>
-                <button type="submit" class="btn btn-success">Guardar Categoría</button>
+                <button type="submit" class="btn btn-success">Guardar Municipio</button>
                 <a href="/home" class="btn btn-secondary" role="button">Inicio</a>
             </center>
+           
         </form>
     </div>
 

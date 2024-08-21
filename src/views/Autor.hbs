@@ -14,37 +14,19 @@
         <h1 class="text-center text-custom mb-4">Tabla Autor</h1>
         
         <!-- Formulario con Bootstrap -->
-        <form action="/guardar/autor" method="POST" class="bgform-custom p-4 rounded shadow-sm">
-            <div class="mb-3">
-                <label for="Primer_Nombre" class="form-label">Primer Nombre</label>
-                <input type="text" class="form-control" id="Primer_Nombre" name="Primer_Nombre" required>
-            </div>
+        <form action="/guardarAutor" method="POST">
+    <label for="Primer_Nombre">Primer Nombre</label>
+    <input type="text" name="Primer_Nombre" id="Primer_Nombre" required>
 
-            <div class="mb-3">
-                <label for="Segundo_Nombre" class="form-label">Segundo Nombre</label>
-                <input type="text" class="form-control" id="Segundo_Nombre" name="Segundo_Nombre" required>
-            </div>
+    <label for="Id_Pais">País</label>
+    <select name="Id_Pais" id="Id_Pais" required>
+        {{#each paises}}
+            <option value="{{this.Id_Pais}}">{{this.Nombre}}</option>
+        {{/each}}
+    </select>
 
-            <div class="mb-3">
-                <label for="Primer_Apellido" class="form-label">Primer Apellido</label>
-                <input type="text" class="form-control" id="Primer_Apellido" name="Primer_Apellido" required>
-            </div>
-
-            <div class="mb-3">
-                <label for="Segundo_Apellido" class="form-label">Segundo Apellido</label>
-                <input type="text" class="form-control" id="Segundo_Apellido" name="Segundo_Apellido" required>
-            </div>
-
-            <div class="mb-3">
-                <label for="Id_Pais" class="form-label">ID País</label>
-                <input type="text" class="form-control" id="Id_Pais" name="Id_Pais" required>
-            </div>
-            <center>
-                <button type="submit" class="btn btn-success">Guardar Autor</button>
-                <a href="/home" class="btn btn-secondary" role="button">Inicio</a>
-            </center>
-           
-        </form>
+    <button type="submit">Guardar Autor</button>
+</form>
     </div>
 
     <!-- Bootstrap JS and Popper.js -->
