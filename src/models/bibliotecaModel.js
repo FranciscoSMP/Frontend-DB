@@ -70,6 +70,27 @@ exports.guardarDepartamento = async ({ Nombre, Id_Pais }) => {
 
 };
 
+exports.guardarDetallePrestamo = async ({ Id_Prestamo, Id_Libro }) => {
+    
+    const query = `INSERT INTO detalle_prestamo (Id_Prestamo, Id_Libro) VALUES (${Id_Prestamo}, ${Id_Libro})`;
+
+    await mysqlConnection.query(query, [Id_Prestamo, Id_Libro]);
+
+    const sqlConn = await sqlServerConnection.poolPromise;
+    await sqlConn.request().query(query);
+
+    const oracleConn = await oracleConnection.connect();
+        await oracleConn.execute(
+            `INSERT INTO detalle_prestamo (Id_Prestamo, Id_Libro) VALUES (:Id_Prestamo, :Id_Libro)`,
+            {
+                Id_Prestamo: Id_Prestamo,
+                Id_Libro: Id_Libro
+            },
+            { autoCommit: true }
+        );
+        await oracleConn.close();
+};
+
 exports.guardarEditorial = async ({ Nombre, Id_Pais }) => {
     
     const query = `INSERT INTO editorial (Nombre, Id_Pais) VALUES ('${Nombre}', ${Id_Pais})`;
@@ -89,7 +110,6 @@ exports.guardarEditorial = async ({ Nombre, Id_Pais }) => {
             { autoCommit: true }
         );
         await oracleConn.close();
-
 };
 
 exports.guardarEmpleado = async ({ Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Puesto, Fecha_Contratacion }) => {
@@ -143,6 +163,52 @@ exports.guardarLibro = async ({ Titulo, Fecha_Publicacion, ISBN, Id_Editorial })
             fechaPublicacion: formattedDate,
             ISBN: ISBN,
             Id_Editorial: Id_Editorial
+        },
+        { autoCommit: true }
+    );
+    await oracleConn.close();
+};
+
+exports.guardarLibroAutor = async ({ Id_Libro, Id_Autor }) => {
+
+    const query = `INSERT INTO libro_autor (Id_Libro, Id_Autor) 
+                   VALUES (${Id_Libro}, ${Id_Autor})`;
+
+    await mysqlConnection.query(query, [Id_Libro, Id_Autor]);
+
+    const sqlConn = await sqlServerConnection.poolPromise;
+    await sqlConn.request().query(query);
+
+    const oracleConn = await oracleConnection.connect();
+    await oracleConn.execute(
+        `INSERT INTO libro_autor (Id_Libro, Id_Autor) 
+         VALUES (:Id_Libro, :Id_Autor)`,
+        {
+            Id_Libro: Id_Libro,
+            Id_Autor: Id_Autor
+        },
+        { autoCommit: true }
+    );
+    await oracleConn.close();
+};
+
+exports.guardarLibroCategoria = async ({ Id_Libro, Id_Categoria }) => {
+
+    const query = `INSERT INTO libro_categoria (Id_Libro, Id_Categoria) 
+                   VALUES (${Id_Libro}, ${Id_Categoria})`;
+
+    await mysqlConnection.query(query, [Id_Libro, Id_Categoria]);
+
+    const sqlConn = await sqlServerConnection.poolPromise;
+    await sqlConn.request().query(query);
+
+    const oracleConn = await oracleConnection.connect();
+    await oracleConn.execute(
+        `INSERT INTO libro_categoria (Id_Libro, Id_Categoria) 
+         VALUES (:Id_Libro, :Id_Categoria)`,
+        {
+            Id_Libro: Id_Libro,
+            Id_Categoria: Id_Categoria
         },
         { autoCommit: true }
     );
@@ -222,19 +288,4 @@ exports.guardarPais = async ({ Nombre }) => {
         { autoCommit: true }
     );
     await oracleConn.close();
-};
-
-exports.obtenerPaises = async () => {
-    const query = `SELECT Id_Pais, Nombre FROM pais`;
-
-    const [mysqlResults] = await mysqlConnection.query(query); // MySQL
-    const sqlServerConn = await sqlServerConnection.poolPromise;
-    const sqlServerResults = await sqlServerConn.request().query(query); // SQL Server
-
-    const oracleConn = await oracleConnection.connect();
-    const oracleResults = await oracleConn.execute(`SELECT Id_Pais, Nombre FROM pais`);
-    await oracleConn.close(); // Oracle
-
-    // Devolver los resultados combinados de las tres bases de datos
-    return [...mysqlResults, ...sqlServerResults.recordset, ...oracleResults.rows];
 };

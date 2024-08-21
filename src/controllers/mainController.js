@@ -16,6 +16,10 @@ exports.departamento = (req, res) => {
     res.render('Departamento');
 };
 
+exports.detalle_prestamo = (req, res) => {
+    res.render('DetallePrestamo');
+};
+
 exports.editorial = (req, res) => {
     res.render('Editorial');
 };
@@ -26,6 +30,14 @@ exports.empleado = (req, res) => {
 
 exports.libro = (req, res) => {
     res.render('Libro');
+};
+
+exports.libro_autor = (req, res) => {
+    res.render('LibroAutor');
+};
+
+exports.libro_categoria = (req, res) => {
+    res.render('LibroCategoria');
 };
 
 exports.miembro = (req, res) => {
@@ -76,6 +88,18 @@ exports.guardarDepartamento= async (req, res) => {
     }
 };
 
+exports.guardarDetallePrestamo= async (req, res) => {
+    const { Id_Prestamo, Id_Libro } = req.body;
+
+    try {
+        await bibliotecaModel.guardarDetallePrestamo({ Id_Prestamo, Id_Libro });
+        res.redirect('/tabla/detalle_prestamo');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al guardar el detalle prestamo');
+    }
+};
+
 exports.guardarEditorial = async (req, res) => {
     const { Nombre, Id_Pais } = req.body;
 
@@ -112,6 +136,30 @@ exports.guardarLibro = async (req, res) => {
     }
 };
 
+exports.guardarLibroAutor = async (req, res) => {
+    const { Id_Libro, Id_Autor } = req.body;
+
+    try {
+        await bibliotecaModel.guardarLibroAutor({ Id_Libro, Id_Autor });
+        res.redirect('/tabla/libro_autor');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al guardar el libro_autor');
+    }
+};
+
+exports.guardarLibroCategoria = async (req, res) => {
+    const { Id_Libro, Id_Categoria } = req.body;
+
+    try {
+        await bibliotecaModel.guardarLibroCategoria({ Id_Libro, Id_Categoria });
+        res.redirect('/tabla/libro_categoria');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al guardar el libro_categoria');
+    }
+};
+
 exports.guardarMiembro = async (req, res) => {
     const { Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Telefono, Fecha_Registro, Id_Municipio } = req.body;
 
@@ -145,15 +193,5 @@ exports.guardarPais = async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).send('Error al guardar el pais');
-    }
-};
-
-exports.autor = async (req, res) => {
-    try {
-        const paises = await bibliotecaModel.obtenerPaises(); // Obtener la lista de países
-        res.render('Autor', { paises }); // Enviar los países a la vista
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Error al cargar los datos de los países');
     }
 };
