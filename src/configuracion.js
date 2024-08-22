@@ -8,14 +8,14 @@ module.exports = {
     oracle: {
         user: 'BIBLIOTECA',
         password: 'r62af79a',
-        connectString: '192.168.0.17/XE'
-        //connectString: 'localhost/XE'
+        //connectString: '192.168.0.17/XE'
+        connectString: 'localhost/XE'
     },
     sqlserver: {
         user: 'sa',
         password: 'r62af79a',
-        server: 'LAPTOP-C6AMNR9V\\SQLEXPRESS',
-        //server: 'VIRTUALPC\\SQLEXPRESS',
+        //server: 'LAPTOP-C6AMNR9V\\SQLEXPRESS',
+        server: 'VIRTUALPC\\SQLEXPRESS',
         database: 'Biblioteca'
     }
 };
