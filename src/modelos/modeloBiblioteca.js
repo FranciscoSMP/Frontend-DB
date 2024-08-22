@@ -1,6 +1,6 @@
-const mysqlConnection = require('../db/mysqlConnection');
-const oracleConnection = require('../db/oracleConnection');
-const sqlServerConnection = require('../db/sqlServerConnection');
+const mysqlConnection = require('../conexiones_db/conexionMySQL');
+const oracleConnection = require('../conexiones_db/conexionOracle');
+const sqlServerConnection = require('../conexiones_db/conexionSQLServer');
 
 exports.guardarAutor = async ({ Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Id_Pais }) => {
     
@@ -11,7 +11,7 @@ exports.guardarAutor = async ({ Primer_Nombre, Segundo_Nombre, Primer_Apellido, 
     const sqlConn = await sqlServerConnection.poolPromise;
     await sqlConn.request().query(query);
 
-    const oracleConn = await oracleConnection.connect();
+    const oracleConn = await oracleConnection.conectar();
         await oracleConn.execute(
             `INSERT INTO autor (Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Id_Pais) VALUES (:Primer_Nombre, :Segundo_Nombre, :Primer_Apellido, :Segundo_Apellido, :Id_Pais)`,
             {
@@ -36,7 +36,7 @@ exports.guardarCategoria = async ({ Nombre }) => {
     const sqlConn = await sqlServerConnection.poolPromise;
     await sqlConn.request().query(query);
 
-    const oracleConn = await oracleConnection.connect();
+    const oracleConn = await oracleConnection.conectar();
         await oracleConn.execute(
             `INSERT INTO categoria (Nombre) VALUES (:Nombre)`,
             {
@@ -57,7 +57,7 @@ exports.guardarDepartamento = async ({ Nombre, Id_Pais }) => {
     const sqlConn = await sqlServerConnection.poolPromise;
     await sqlConn.request().query(query);
 
-    const oracleConn = await oracleConnection.connect();
+    const oracleConn = await oracleConnection.conectar();
         await oracleConn.execute(
             `INSERT INTO departamento (Nombre, Id_Pais) VALUES (:Nombre, :Id_Pais)`,
             {
@@ -79,7 +79,7 @@ exports.guardarDetallePrestamo = async ({ Id_Prestamo, Id_Libro }) => {
     const sqlConn = await sqlServerConnection.poolPromise;
     await sqlConn.request().query(query);
 
-    const oracleConn = await oracleConnection.connect();
+    const oracleConn = await oracleConnection.conectar();
         await oracleConn.execute(
             `INSERT INTO detalle_prestamo (Id_Prestamo, Id_Libro) VALUES (:Id_Prestamo, :Id_Libro)`,
             {
@@ -100,7 +100,7 @@ exports.guardarEditorial = async ({ Nombre, Id_Pais }) => {
     const sqlConn = await sqlServerConnection.poolPromise;
     await sqlConn.request().query(query);
 
-    const oracleConn = await oracleConnection.connect();
+    const oracleConn = await oracleConnection.conectar();
         await oracleConn.execute(
             `INSERT INTO editorial (Nombre, Id_Pais) VALUES (:Nombre, :Id_Pais)`,
             {
@@ -125,7 +125,7 @@ exports.guardarEmpleado = async ({ Primer_Nombre, Segundo_Nombre, Primer_Apellid
     const sqlConn = await sqlServerConnection.poolPromise;
     await sqlConn.request().query(query);
 
-    const oracleConn = await oracleConnection.connect();
+    const oracleConn = await oracleConnection.conectar();
     await oracleConn.execute(
         `INSERT INTO empleado (Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Puesto, Fecha_Contratacion) 
          VALUES (:Primer_Nombre, :Segundo_Nombre, :Primer_Apellido, :Segundo_Apellido, :Puesto, TO_DATE(:fechaContratacion, 'YYYY-MM-DD'))`,
@@ -154,7 +154,7 @@ exports.guardarLibro = async ({ Titulo, Fecha_Publicacion, ISBN, Id_Editorial })
     const sqlConn = await sqlServerConnection.poolPromise;
     await sqlConn.request().query(query);
 
-    const oracleConn = await oracleConnection.connect();
+    const oracleConn = await oracleConnection.conectar();
     await oracleConn.execute(
         `INSERT INTO libro (Titulo, Fecha_Publicacion, ISBN, Id_Editorial) 
          VALUES (:Titulo, TO_DATE(:fechaPublicacion, 'YYYY-MM-DD'), :ISBN, :Id_Editorial)`,
@@ -179,7 +179,7 @@ exports.guardarLibroAutor = async ({ Id_Libro, Id_Autor }) => {
     const sqlConn = await sqlServerConnection.poolPromise;
     await sqlConn.request().query(query);
 
-    const oracleConn = await oracleConnection.connect();
+    const oracleConn = await oracleConnection.conectar();
     await oracleConn.execute(
         `INSERT INTO libro_autor (Id_Libro, Id_Autor) 
          VALUES (:Id_Libro, :Id_Autor)`,
@@ -202,7 +202,7 @@ exports.guardarLibroCategoria = async ({ Id_Libro, Id_Categoria }) => {
     const sqlConn = await sqlServerConnection.poolPromise;
     await sqlConn.request().query(query);
 
-    const oracleConn = await oracleConnection.connect();
+    const oracleConn = await oracleConnection.conectar();
     await oracleConn.execute(
         `INSERT INTO libro_categoria (Id_Libro, Id_Categoria) 
          VALUES (:Id_Libro, :Id_Categoria)`,
@@ -227,7 +227,7 @@ exports.guardarMiembro = async ({ Primer_Nombre, Segundo_Nombre, Primer_Apellido
     const sqlConn = await sqlServerConnection.poolPromise;
     await sqlConn.request().query(query);
 
-    const oracleConn = await oracleConnection.connect();
+    const oracleConn = await oracleConnection.conectar();
     await oracleConn.execute(
         `INSERT INTO miembro (Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Telefono, Fecha_Registro, Id_Municipio) 
          VALUES (:Primer_Nombre, :Segundo_Nombre, :Primer_Apellido, :Segundo_Apellido, :Telefono, TO_DATE(:fechaRegistro, 'YYYY-MM-DD'), :Id_Municipio)`,
@@ -255,7 +255,7 @@ exports.guardarMunicipio = async ({ Nombre, Id_Departamento }) => {
     const sqlConn = await sqlServerConnection.poolPromise;
     await sqlConn.request().query(query);
 
-    const oracleConn = await oracleConnection.connect();
+    const oracleConn = await oracleConnection.conectar();
     await oracleConn.execute(
         `INSERT INTO municipio (Nombre, Id_Departamento) 
          VALUES (:Nombre, :Id_Departamento)`,
@@ -278,7 +278,7 @@ exports.guardarPais = async ({ Nombre }) => {
     const sqlConn = await sqlServerConnection.poolPromise;
     await sqlConn.request().query(query);
 
-    const oracleConn = await oracleConnection.connect();
+    const oracleConn = await oracleConnection.conectar();
     await oracleConn.execute(
         `INSERT INTO pais (Nombre) 
          VALUES (:Nombre)`,
@@ -303,7 +303,7 @@ exports.guardarPrestamo = async ({ Id_Miembro, Id_Empleado, Fecha_Prestamo, Fech
     const sqlConn = await sqlServerConnection.poolPromise;
     await sqlConn.request().query(query);
 
-    const oracleConn = await oracleConnection.connect();
+    const oracleConn = await oracleConnection.conectar();
     await oracleConn.execute(
         `INSERT INTO prestamo (Id_Miembro, Id_Empleado, Fecha_Prestamo, Fecha_Devolucion) 
          VALUES (:Id_Miembro, :Id_Empleado, TO_DATE(:fechaPrestamo, 'YYYY-MM-DD'), TO_DATE(:fechaDevolucion, 'YYYY-MM-DD'))`,

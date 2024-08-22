@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const mainController = require('../controllers/mainController');
+const mainController = require('../controladores/controladorPrincipal');
 
-router.get('/', mainController.home);
-router.get('/home', mainController.home);
+router.get('/', mainController.inicio);
+router.get('/inicio', mainController.inicio);
 
 router.get('/tabla/autor', mainController.autor);
 router.get('/tabla/categoria', mainController.categoria);
