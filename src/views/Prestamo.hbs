@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <div class="container mt-5 bg-custom">
+        <h1 class="text-center text-custom mb-4">Tabla Prestamo</h1>
+        
+        <!-- Formulario con Bootstrap -->
+        <form action="/guardar/prestamo" method="POST" class="form p-4 rounded shadow-sm">
+            <div class="mb-3">
+                <label for="Id_Miembro" class="form-label">ID Miembro</label>
+                <input type="text" class="form-control" id="Id_Miembro" name="Id_Miembro" required>
+            </div>
+            <div class="mb-3">
+                <label for="Id_Empleado" class="form-label">ID Empleado</label>
+                <input type="text" class="form-control" id="Id_Empleado" name="Id_Empleado" required>
+            </div>
+            <div class="mb-3">
+                <label for="Fecha_Prestamo" class="form-label">Fecha Prestamo</label>
+                <input type="date" class="form-control" id="Fecha_Prestamo" name="Fecha_Prestamo" required>
+            </div>
+            <div class="mb-3">
+                <label for="Fecha_Devolucion" class="form-label">Fecha Devolucion</label>
+                <input type="date" class="form-control" id="Fecha_Devolucion" name="Fecha_Devolucion" required>
+            </div>
+            <center>
+                <button type="submit" class="btn btn-success">Guardar Prestamo</button>
+                <a href="/home" class="btn btn-secondary" role="button">Inicio</a>
+            </center>
+           
+        </form>
+    </div>
+
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

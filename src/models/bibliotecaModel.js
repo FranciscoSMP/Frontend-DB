@@ -292,12 +292,13 @@ exports.guardarPais = async ({ Nombre }) => {
 
 exports.guardarPrestamo = async ({ Id_Miembro, Id_Empleado, Fecha_Prestamo, Fecha_Devolucion }) => {
 
-    const formattedDate = new Date(Fecha_Prestamo, Fecha_Devolucion).toISOString().slice(0, 10);
+    const formattedDate1 = new Date(Fecha_Prestamo).toISOString().slice(0, 10);
+    const formattedDate2 = new Date(Fecha_Devolucion).toISOString().slice(0, 10);
     
     const query = `INSERT INTO prestamo (Id_Miembro, Id_Empleado, Fecha_Prestamo, Fecha_Devolucion) 
                    VALUES (${Id_Miembro}, ${Id_Empleado}, '${Fecha_Prestamo}', '${Fecha_Devolucion}')`;
 
-    await mysqlConnection.query(query, [Nombre]);
+    await mysqlConnection.query(query, [Id_Miembro, Id_Empleado, Fecha_Prestamo, Fecha_Devolucion]);
 
     const sqlConn = await sqlServerConnection.poolPromise;
     await sqlConn.request().query(query);
@@ -309,8 +310,8 @@ exports.guardarPrestamo = async ({ Id_Miembro, Id_Empleado, Fecha_Prestamo, Fech
         {
             Id_Miembro: Id_Miembro,
             Id_Empleado: Id_Empleado,
-            fechaPrestamo
-
+            fechaPrestamo: formattedDate1,
+            fechaDevolucion: formattedDate2
         },
         { autoCommit: true }
     );

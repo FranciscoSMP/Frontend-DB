@@ -17,6 +17,7 @@ router.get('/tabla/libro_categoria', mainController.libro_categoria);
 router.get('/tabla/miembro', mainController.miembro);
 router.get('/tabla/municipio', mainController.municipio);
 router.get('/tabla/pais', mainController.pais);
+router.get('/tabla/prestamo', mainController.prestamo);
 
 router.post('/guardar/autor', mainController.guardarAutor);
 router.post('/guardar/categoria', mainController.guardarCategoria);
@@ -28,6 +29,8 @@ router.post('/guardar/libro', mainController.guardarLibro);
 router.post('/guardar/libro_autor', mainController.guardarLibroAutor);
 router.post('/guardar/libro_categoria', mainController.guardarLibroCategoria);
 router.post('/guardar/miembro', mainController.guardarMiembro);
+router.post('/guardar/municipio', mainController.guardarMunicipio);
 router.post('/guardar/pais', mainController.guardarPais);
+router.post('/guardar/prestamo', mainController.guardarPrestamo);
 
 module.exports = router;
