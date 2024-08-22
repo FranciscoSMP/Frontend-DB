@@ -52,6 +52,10 @@ exports.pais = (req, res) => {
     res.render('Pais');
 };
 
+exports.prestamo = (req, res) => {
+    res.render('Prestamo');
+};
+
 exports.guardarAutor = async (req, res) => {
     const { Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Id_Pais } = req.body;
 
@@ -193,5 +197,17 @@ exports.guardarPais = async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).send('Error al guardar el pais');
+    }
+};
+
+exports.guardarPrestamo = async (req, res) => {
+    const { Id_Miembro, Id_Empleado, Fecha_Prestamo, Fecha_Devolucion } = req.body;
+
+    try {
+        await bibliotecaModel.guardarPrestamo({ Id_Miembro, Id_Empleado, Fecha_Prestamo, Fecha_Devolucion });
+        res.redirect('/tabla/prestamo');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al guardar el prestamo');
     }
 };

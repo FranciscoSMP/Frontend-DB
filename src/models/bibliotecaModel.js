@@ -289,3 +289,30 @@ exports.guardarPais = async ({ Nombre }) => {
     );
     await oracleConn.close();
 };
+
+exports.guardarPrestamo = async ({ Id_Miembro, Id_Empleado, Fecha_Prestamo, Fecha_Devolucion }) => {
+
+    const formattedDate = new Date(Fecha_Prestamo, Fecha_Devolucion).toISOString().slice(0, 10);
+    
+    const query = `INSERT INTO prestamo (Id_Miembro, Id_Empleado, Fecha_Prestamo, Fecha_Devolucion) 
+                   VALUES (${Id_Miembro}, ${Id_Empleado}, '${Fecha_Prestamo}', '${Fecha_Devolucion}')`;
+
+    await mysqlConnection.query(query, [Nombre]);
+
+    const sqlConn = await sqlServerConnection.poolPromise;
+    await sqlConn.request().query(query);
+
+    const oracleConn = await oracleConnection.connect();
+    await oracleConn.execute(
+        `INSERT INTO prestamo (Id_Miembro, Id_Empleado, Fecha_Prestamo, Fecha_Devolucion) 
+         VALUES (:Id_Miembro, :Id_Empleado, TO_DATE(:fechaPrestamo, 'YYYY-MM-DD'), TO_DATE(:fechaDevolucion, 'YYYY-MM-DD'))`,
+        {
+            Id_Miembro: Id_Miembro,
+            Id_Empleado: Id_Empleado,
+            fechaPrestamo
+
+        },
+        { autoCommit: true }
+    );
+    await oracleConn.close();
+};
