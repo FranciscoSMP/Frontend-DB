@@ -2,318 +2,189 @@ const conexionMySQL = require('../conexiones_db/conexionMySQL');
 const conexionOracle = require('../conexiones_db/conexionOracle');
 const conexionSQLServer = require('../conexiones_db/conexionSQLServer');
 
-exports.guardarAutor = async ({ Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Id_Pais }) => {
-    
-    const query = `INSERT INTO autor (Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Id_Pais) VALUES ('${Primer_Nombre}', '${Segundo_Nombre}', '${Primer_Apellido}', '${Segundo_Apellido}', ${Id_Pais})`;
+// Función general para guardar en MySQL
+const ejecutarMySQL = async (query, params) => {
+    await conexionMySQL.query(query, params);
+};
 
-    await conexionMySQL.query(query, [Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Id_Pais]);
-
+// Función general para guardar en SQL Server
+const ejecutarSQLServer = async (query) => {
     const conSQL = await conexionSQLServer.poolPromise;
     await conSQL.request().query(query);
+};
 
+// Función general para guardar en Oracle
+const ejecutarOracle = async (query, params) => {
     const conOracle = await conexionOracle.conectar();
-        await conOracle.execute(
-            `INSERT INTO autor (Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Id_Pais) VALUES (:Primer_Nombre, :Segundo_Nombre, :Primer_Apellido, :Segundo_Apellido, :Id_Pais)`,
-            {
-                Primer_Nombre: Primer_Nombre,
-                Segundo_Nombre: Segundo_Nombre,
-                Primer_Apellido: Primer_Apellido,
-                Segundo_Apellido: Segundo_Apellido,
-                Id_Pais: Id_Pais
-            },
-            { autoCommit: true }
-        );
-        await conOracle.close();
+    await conOracle.execute(query, params, { autoCommit: true });
+    await conOracle.close();
+};
 
+// Función general para guardar en las tres bases de datos
+const guardarEnBasesDatos = async (queryMySQL, querySQLServer, queryOracle, paramsMySQL, paramsOracle) => {
+    await Promise.all([
+        ejecutarMySQL(queryMySQL, paramsMySQL),
+        ejecutarSQLServer(querySQLServer),
+        ejecutarOracle(queryOracle, paramsOracle)
+    ]);
+};
+
+// Funciones específicas para cada entidad
+exports.guardarAutor = async ({ Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Id_Pais }) => {
+    const query = `INSERT INTO autor (Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Id_Pais) VALUES ('${Primer_Nombre}', '${Segundo_Nombre}', '${Primer_Apellido}', '${Segundo_Apellido}', ${Id_Pais})`;
+    const queryOracle = `INSERT INTO autor (Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Id_Pais) 
+                         VALUES (:Primer_Nombre, :Segundo_Nombre, :Primer_Apellido, :Segundo_Apellido, :Id_Pais)`;
+    const params = [Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Id_Pais];
+    const paramsOracle = {
+        Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Id_Pais
+    };
+
+    await guardarEnBasesDatos(query, query, queryOracle, params, paramsOracle);
 };
 
 exports.guardarCategoria = async ({ Nombre }) => {
-    
     const query = `INSERT INTO categoria (Nombre) VALUES ('${Nombre}')`;
+    const queryOracle = `INSERT INTO categoria (Nombre) VALUES (:Nombre)`;
+    const params = [Nombre];
+    const paramsOracle = { Nombre };
 
-    await conexionMySQL.query(query, [Nombre]);
-
-    const conSQL = await conexionSQLServer.poolPromise;
-    await conSQL.request().query(query);
-
-    const conOracle = await conexionOracle.conectar();
-        await conOracle.execute(
-            `INSERT INTO categoria (Nombre) VALUES (:Nombre)`,
-            {
-                Nombre: Nombre
-            },
-            { autoCommit: true }
-        );
-        await conOracle.close();
-
+    await guardarEnBasesDatos(query, query, queryOracle, params, paramsOracle);
 };
+
+// Agrega más funciones para otras entidades de manera similar
 
 exports.guardarDepartamento = async ({ Nombre, Id_Pais }) => {
-    
-    const query = `INSERT INTO departamento (Nombre, Id_Pais) VALUES ('${Nombre}', ${Id_Pais})`;
+    const query = `INSERT INTO departamento (Nombre, Id_Pais) VALUES ('${Nombre}', '${Id_Pais}')`;
+    const queryOracle = `INSERT INTO departamento (Nombre, Id_Pais) VALUES (:Nombre, :Id_Pais)`;
+    const params = [Nombre, Id_Pais];
+    const paramsOracle = { Nombre, Id_Pais };
 
-    await conexionMySQL.query(query, [Nombre, Id_Pais]);
-
-    const conSQL = await conexionSQLServer.poolPromise;
-    await conSQL.request().query(query);
-
-    const conOracle = await conexionOracle.conectar();
-        await conOracle.execute(
-            `INSERT INTO departamento (Nombre, Id_Pais) VALUES (:Nombre, :Id_Pais)`,
-            {
-                Nombre: Nombre,
-                Id_Pais: Id_Pais
-            },
-            { autoCommit: true }
-        );
-        await conOracle.close();
-
+    await guardarEnBasesDatos(query, query, queryOracle, params, paramsOracle);
 };
+
+// Sigue con el mismo patrón para las demás entidades...
 
 exports.guardarDetallePrestamo = async ({ Id_Prestamo, Id_Libro }) => {
     
     const query = `INSERT INTO detalle_prestamo (Id_Prestamo, Id_Libro) VALUES (${Id_Prestamo}, ${Id_Libro})`;
-
-    await conexionMySQL.query(query, [Id_Prestamo, Id_Libro]);
-
-    const conSQL = await conexionSQLServer.poolPromise;
-    await conSQL.request().query(query);
-
-    const conOracle = await conexionOracle.conectar();
-        await conOracle.execute(
-            `INSERT INTO detalle_prestamo (Id_Prestamo, Id_Libro) VALUES (:Id_Prestamo, :Id_Libro)`,
-            {
-                Id_Prestamo: Id_Prestamo,
-                Id_Libro: Id_Libro
-            },
-            { autoCommit: true }
-        );
-        await conOracle.close();
+    const queryOracle = `INSERT INTO detalle_prestamo (Id_Prestamo, Id_Libro) VALUES (:Id_Prestamo, :Id_Libro)`;
+    const params = [Id_Prestamo, Id_Libro];
+    const paramsOracle = { Id_Prestamo, Id_Libro };
+    
+    await guardarEnBasesDatos(query, query, queryOracle, params, paramsOracle);
 };
 
 exports.guardarEditorial = async ({ Nombre, Id_Pais }) => {
     
     const query = `INSERT INTO editorial (Nombre, Id_Pais) VALUES ('${Nombre}', ${Id_Pais})`;
-
-    await conexionMySQL.query(query, [Nombre, Id_Pais]);
-
-    const conSQL = await conexionSQLServer.poolPromise;
-    await conSQL.request().query(query);
-
-    const conOracle = await conexionOracle.conectar();
-        await conOracle.execute(
-            `INSERT INTO editorial (Nombre, Id_Pais) VALUES (:Nombre, :Id_Pais)`,
-            {
-                Nombre: Nombre,
-                Id_Pais: Id_Pais
-            },
-            { autoCommit: true }
-        );
-        await conOracle.close();
+    const queryOracle = `INSERT INTO editorial (Nombre, Id_Pais) VALUES (:Nombre, :Id_Pais)`;
+    const params = [Nombre, Id_Pais];
+    const paramsOracle = { Nombre, Id_Pais };
+    
+    await guardarEnBasesDatos(query, query, queryOracle, params, paramsOracle);
 };
 
 exports.guardarEmpleado = async ({ Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Puesto, Fecha_Contratacion }) => {
 
-    
-    const formatoFecha = new Date(Fecha_Contratacion).toISOString().slice(0, 10);
-
     const query = `INSERT INTO empleado (Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Puesto, Fecha_Contratacion) 
-                   VALUES ('${Primer_Nombre}', '${Segundo_Nombre}', '${Primer_Apellido}', '${Segundo_Apellido}', '${Puesto}', '${Fecha_Contratacion}')`;
+    VALUES ('${Primer_Nombre}', '${Segundo_Nombre}', '${Primer_Apellido}', '${Segundo_Apellido}', '${Puesto}', '${Fecha_Contratacion}')`;
 
-    await conexionMySQL.query(query, [Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Puesto, Fecha_Contratacion]);
+    const queryOracle = `INSERT INTO empleado (Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Puesto, Fecha_Contratacion) 
+    VALUES (:Primer_Nombre, :Segundo_Nombre, :Primer_Apellido, :Segundo_Apellido, :Puesto, TO_DATE(:Fecha_Contratacion, 'YYYY-MM-DD'))`;
 
-    const conSQL = await conexionSQLServer.poolPromise;
-    await conSQL.request().query(query);
+    const params = [Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Puesto, Fecha_Contratacion];
+    const paramsOracle = { Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Puesto, Fecha_Contratacion };
+    
+    await guardarEnBasesDatos(query, query, queryOracle, params, paramsOracle);
 
-    const conOracle = await conexionOracle.conectar();
-    await conOracle.execute(
-        `INSERT INTO empleado (Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Puesto, Fecha_Contratacion) 
-         VALUES (:Primer_Nombre, :Segundo_Nombre, :Primer_Apellido, :Segundo_Apellido, :Puesto, TO_DATE(:fechaContratacion, 'YYYY-MM-DD'))`,
-        {
-            Primer_Nombre: Primer_Nombre,
-            Segundo_Nombre: Segundo_Nombre,
-            Primer_Apellido: Primer_Apellido,
-            Segundo_Apellido: Segundo_Apellido,
-            Puesto: Puesto,
-            fechaContratacion: formatoFecha
-        },
-        { autoCommit: true }
-    );
-    await conOracle.close();
 };
 
 exports.guardarLibro = async ({ Titulo, Fecha_Publicacion, ISBN, Id_Editorial }) => {
 
-    const formatoFecha = new Date(Fecha_Publicacion).toISOString().slice(0, 10);
-
     const query = `INSERT INTO libro (Titulo, Fecha_Publicacion, ISBN, Id_Editorial) 
-                   VALUES ('${Titulo}', '${Fecha_Publicacion}', '${ISBN}', ${Id_Editorial})`;
+    VALUES ('${Titulo}', '${Fecha_Publicacion}', '${ISBN}', ${Id_Editorial})`;
 
-    await conexionMySQL.query(query, [Titulo, Fecha_Publicacion, ISBN, Id_Editorial]);
+    const queryOracle = `INSERT INTO libro (Titulo, Fecha_Publicacion, ISBN, Id_Editorial) 
+    VALUES (:Titulo, TO_DATE(:Fecha_Publicacion, 'YYYY-MM-DD'), :ISBN, :Id_Editorial)`;
 
-    const conSQL = await conexionSQLServer.poolPromise;
-    await conSQL.request().query(query);
-
-    const conOracle = await conexionOracle.conectar();
-    await conOracle.execute(
-        `INSERT INTO libro (Titulo, Fecha_Publicacion, ISBN, Id_Editorial) 
-         VALUES (:Titulo, TO_DATE(:fechaPublicacion, 'YYYY-MM-DD'), :ISBN, :Id_Editorial)`,
-        {
-            Titulo: Titulo,
-            fechaPublicacion: formatoFecha,
-            ISBN: ISBN,
-            Id_Editorial: Id_Editorial
-        },
-        { autoCommit: true }
-    );
-    await conOracle.close();
+    const params = [Titulo, Fecha_Publicacion, ISBN, Id_Editorial];
+    const paramsOracle = { Titulo, Fecha_Publicacion, ISBN, Id_Editorial};
+    
+    await guardarEnBasesDatos(query, query, queryOracle, params, paramsOracle);
 };
 
 exports.guardarLibroAutor = async ({ Id_Libro, Id_Autor }) => {
 
-    const query = `INSERT INTO libro_autor (Id_Libro, Id_Autor) 
-                   VALUES (${Id_Libro}, ${Id_Autor})`;
+    const query = `INSERT INTO libro_autor (Id_Libro, Id_Autor) VALUES (${Id_Libro}, ${Id_Autor})`;
 
-    await conexionMySQL.query(query, [Id_Libro, Id_Autor]);
+    const queryOracle = `INSERT INTO libro_autor (Id_Libro, Id_Autor) VALUES (:Id_Libro, :Id_Autor)`;
 
-    const conSQL = await conexionSQLServer.poolPromise;
-    await conSQL.request().query(query);
+    const params = [Id_Libro, Id_Autor];
+    const paramsOracle = { Id_Libro, Id_Autor };
+    
+    await guardarEnBasesDatos(query, query, queryOracle, params, paramsOracle);
 
-    const conOracle = await conexionOracle.conectar();
-    await conOracle.execute(
-        `INSERT INTO libro_autor (Id_Libro, Id_Autor) 
-         VALUES (:Id_Libro, :Id_Autor)`,
-        {
-            Id_Libro: Id_Libro,
-            Id_Autor: Id_Autor
-        },
-        { autoCommit: true }
-    );
-    await conOracle.close();
 };
 
 exports.guardarLibroCategoria = async ({ Id_Libro, Id_Categoria }) => {
 
     const query = `INSERT INTO libro_categoria (Id_Libro, Id_Categoria) 
-                   VALUES (${Id_Libro}, ${Id_Categoria})`;
+    VALUES (${Id_Libro}, ${Id_Categoria})`;
 
-    await conexionMySQL.query(query, [Id_Libro, Id_Categoria]);
+    const queryOracle = `INSERT INTO libro_categoria (Id_Libro, Id_Categoria) 
+    VALUES (:Id_Libro, :Id_Categoria)`;
 
-    const conSQL = await conexionSQLServer.poolPromise;
-    await conSQL.request().query(query);
-
-    const conOracle = await conexionOracle.conectar();
-    await conOracle.execute(
-        `INSERT INTO libro_categoria (Id_Libro, Id_Categoria) 
-         VALUES (:Id_Libro, :Id_Categoria)`,
-        {
-            Id_Libro: Id_Libro,
-            Id_Categoria: Id_Categoria
-        },
-        { autoCommit: true }
-    );
-    await conOracle.close();
+    const params = [Id_Libro, Id_Categoria];
+    const paramsOracle = { Id_Libro, Id_Categoria };
+    
+    await guardarEnBasesDatos(query, query, queryOracle, params, paramsOracle);
 };
 
 exports.guardarMiembro = async ({ Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Telefono, Fecha_Registro, Id_Municipio }) => {
 
-    const formatoFecha = new Date(Fecha_Registro).toISOString().slice(0, 10);
-
     const query = `INSERT INTO miembro (Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Telefono, Fecha_Registro, Id_Municipio) 
-                   VALUES ('${Primer_Nombre}', '${Segundo_Nombre}', '${Primer_Apellido}', '${Segundo_Apellido}', '${Telefono}', '${Fecha_Registro}', ${Id_Municipio})`;
-
-    await conexionMySQL.query(query, [Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Telefono, Fecha_Registro, Id_Municipio]);
-
-    const conSQL = await conexionSQLServer.poolPromise;
-    await conSQL.request().query(query);
-
-    const conOracle = await conexionOracle.conectar();
-    await conOracle.execute(
-        `INSERT INTO miembro (Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Telefono, Fecha_Registro, Id_Municipio) 
-         VALUES (:Primer_Nombre, :Segundo_Nombre, :Primer_Apellido, :Segundo_Apellido, :Telefono, TO_DATE(:fechaRegistro, 'YYYY-MM-DD'), :Id_Municipio)`,
-        {
-            Primer_Nombre: Primer_Nombre,
-            Segundo_Nombre: Segundo_Nombre,
-            Primer_Apellido: Primer_Apellido,
-            Segundo_Apellido: Segundo_Apellido,
-            Telefono: Telefono,
-            fechaRegistro: formatoFecha,
-            Id_Municipio: Id_Municipio
-        },
-        { autoCommit: true }
-    );
-    await conOracle.close();
+    VALUES ('${Primer_Nombre}', '${Segundo_Nombre}', '${Primer_Apellido}', '${Segundo_Apellido}', '${Telefono}', '${Fecha_Registro}', ${Id_Municipio})`;
+    const queryOracle = `INSERT INTO miembro (Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Telefono, Fecha_Registro, Id_Municipio) 
+    VALUES (:Primer_Nombre, :Segundo_Nombre, :Primer_Apellido, :Segundo_Apellido, :Telefono, TO_DATE(:Fecha_Registro, 'YYYY-MM-DD'), :Id_Municipio)`;
+    
+    const params = [Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Telefono, Fecha_Registro, Id_Municipio];
+    const paramsOracle = { Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Telefono, Fecha_Registro, Id_Municipio };
+    
+    await guardarEnBasesDatos(query, query, queryOracle, params, paramsOracle);
 };
 
 exports.guardarMunicipio = async ({ Nombre, Id_Departamento }) => {
 
-    const query = `INSERT INTO municipio (Nombre, Id_Departamento) 
-                   VALUES ('${Nombre}', ${Id_Departamento})`;
+    const query = `INSERT INTO municipio (Nombre, Id_Departamento) VALUES ('${Nombre}', ${Id_Departamento})`;
 
-    await conexionMySQL.query(query, [Nombre, Id_Departamento]);
+    const queryOracle = `INSERT INTO municipio (Nombre, Id_Departamento) VALUES (:Nombre, :Id_Departamento)`;
 
-    const conSQL = await conexionSQLServer.poolPromise;
-    await conSQL.request().query(query);
-
-    const conOracle = await conexionOracle.conectar();
-    await conOracle.execute(
-        `INSERT INTO municipio (Nombre, Id_Departamento) 
-         VALUES (:Nombre, :Id_Departamento)`,
-        {
-            Nombre: Nombre,
-            Id_Departamento: Id_Departamento
-        },
-        { autoCommit: true }
-    );
-    await conOracle.close();
+    const params = [Nombre, Id_Departamento];
+    const paramsOracle = { Nombre, Id_Departamento };
+    
+    await guardarEnBasesDatos(query, query, queryOracle, params, paramsOracle);
 };
 
 exports.guardarPais = async ({ Nombre }) => {
-
-    const query = `INSERT INTO pais (Nombre) 
-                   VALUES ('${Nombre}')`;
-
-    await conexionMySQL.query(query, [Nombre]);
-
-    const conSQL = await conexionSQLServer.poolPromise;
-    await conSQL.request().query(query);
-
-    const conOracle = await conexionOracle.conectar();
-    await conOracle.execute(
-        `INSERT INTO pais (Nombre) 
-         VALUES (:Nombre)`,
-        {
-            Nombre: Nombre
-        },
-        { autoCommit: true }
-    );
-    await conOracle.close();
+    const query = `INSERT INTO pais (Nombre) VALUES ('${Nombre}')`;
+    
+    const queryOracle = `INSERT INTO pais (Nombre) VALUES (:Nombre)`;
+    
+    const params = [Nombre];
+    const paramsOracle = { Nombre };
+    
+    await guardarEnBasesDatos(query, query, queryOracle, params, paramsOracle);
 };
 
 exports.guardarPrestamo = async ({ Id_Miembro, Id_Empleado, Fecha_Prestamo, Fecha_Devolucion }) => {
-
-    const formatoFecha1 = new Date(Fecha_Prestamo).toISOString().slice(0, 10);
-    const formatoFecha2 = new Date(Fecha_Devolucion).toISOString().slice(0, 10);
-    
+   
     const query = `INSERT INTO prestamo (Id_Miembro, Id_Empleado, Fecha_Prestamo, Fecha_Devolucion) 
-                   VALUES (${Id_Miembro}, ${Id_Empleado}, '${Fecha_Prestamo}', '${Fecha_Devolucion}')`;
-
-    await conexionMySQL.query(query, [Id_Miembro, Id_Empleado, Fecha_Prestamo, Fecha_Devolucion]);
-
-    const conSQL = await conexionSQLServer.poolPromise;
-    await conSQL.request().query(query);
-
-    const conOracle = await conexionOracle.conectar();
-    await conOracle.execute(
-        `INSERT INTO prestamo (Id_Miembro, Id_Empleado, Fecha_Prestamo, Fecha_Devolucion) 
-         VALUES (:Id_Miembro, :Id_Empleado, TO_DATE(:fechaPrestamo, 'YYYY-MM-DD'), TO_DATE(:fechaDevolucion, 'YYYY-MM-DD'))`,
-        {
-            Id_Miembro: Id_Miembro,
-            Id_Empleado: Id_Empleado,
-            fechaPrestamo: formatoFecha1,
-            fechaDevolucion: formatoFecha2
-        },
-        { autoCommit: true }
-    );
-    await conOracle.close();
+    VALUES (${Id_Miembro}, ${Id_Empleado}, '${Fecha_Prestamo}', '${Fecha_Devolucion}')`;
+    const queryOracle = `INSERT INTO prestamo (Id_Miembro, Id_Empleado, Fecha_Prestamo, Fecha_Devolucion) 
+    VALUES (:Id_Miembro, :Id_Empleado, TO_DATE(:Fecha_Prestamo, 'YYYY-MM-DD'), TO_DATE(:Fecha_Devolucion, 'YYYY-MM-DD'))`;
+    
+    const params = [Id_Miembro, Id_Empleado, Fecha_Prestamo, Fecha_Devolucion];
+    const paramsOracle = { Id_Miembro, Id_Empleado, Fecha_Prestamo, Fecha_Devolucion };
+         
+    await guardarEnBasesDatos(query, query, queryOracle, params, paramsOracle);
 };
