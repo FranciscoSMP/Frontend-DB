@@ -8,11 +8,11 @@ exports.guardarAutor = async ({ Primer_Nombre, Segundo_Nombre, Primer_Apellido, 
 
     await conexionMySQL.query(query, [Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Id_Pais]);
 
-    const sqlConn = await conexionSQLServer.poolPromise;
-    await sqlConn.request().query(query);
+    const conSQL = await conexionSQLServer.poolPromise;
+    await conSQL.request().query(query);
 
-    const oracleConn = await conexionOracle.conectar();
-        await oracleConn.execute(
+    const conOracle = await conexionOracle.conectar();
+        await conOracle.execute(
             `INSERT INTO autor (Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Id_Pais) VALUES (:Primer_Nombre, :Segundo_Nombre, :Primer_Apellido, :Segundo_Apellido, :Id_Pais)`,
             {
                 Primer_Nombre: Primer_Nombre,
@@ -23,7 +23,7 @@ exports.guardarAutor = async ({ Primer_Nombre, Segundo_Nombre, Primer_Apellido, 
             },
             { autoCommit: true }
         );
-        await oracleConn.close();
+        await conOracle.close();
 
 };
 
@@ -33,18 +33,18 @@ exports.guardarCategoria = async ({ Nombre }) => {
 
     await conexionMySQL.query(query, [Nombre]);
 
-    const sqlConn = await conexionSQLServer.poolPromise;
-    await sqlConn.request().query(query);
+    const conSQL = await conexionSQLServer.poolPromise;
+    await conSQL.request().query(query);
 
-    const oracleConn = await conexionOracle.conectar();
-        await oracleConn.execute(
+    const conOracle = await conexionOracle.conectar();
+        await conOracle.execute(
             `INSERT INTO categoria (Nombre) VALUES (:Nombre)`,
             {
                 Nombre: Nombre
             },
             { autoCommit: true }
         );
-        await oracleConn.close();
+        await conOracle.close();
 
 };
 
@@ -54,11 +54,11 @@ exports.guardarDepartamento = async ({ Nombre, Id_Pais }) => {
 
     await conexionMySQL.query(query, [Nombre, Id_Pais]);
 
-    const sqlConn = await conexionSQLServer.poolPromise;
-    await sqlConn.request().query(query);
+    const conSQL = await conexionSQLServer.poolPromise;
+    await conSQL.request().query(query);
 
-    const oracleConn = await conexionOracle.conectar();
-        await oracleConn.execute(
+    const conOracle = await conexionOracle.conectar();
+        await conOracle.execute(
             `INSERT INTO departamento (Nombre, Id_Pais) VALUES (:Nombre, :Id_Pais)`,
             {
                 Nombre: Nombre,
@@ -66,7 +66,7 @@ exports.guardarDepartamento = async ({ Nombre, Id_Pais }) => {
             },
             { autoCommit: true }
         );
-        await oracleConn.close();
+        await conOracle.close();
 
 };
 
@@ -76,11 +76,11 @@ exports.guardarDetallePrestamo = async ({ Id_Prestamo, Id_Libro }) => {
 
     await conexionMySQL.query(query, [Id_Prestamo, Id_Libro]);
 
-    const sqlConn = await conexionSQLServer.poolPromise;
-    await sqlConn.request().query(query);
+    const conSQL = await conexionSQLServer.poolPromise;
+    await conSQL.request().query(query);
 
-    const oracleConn = await conexionOracle.conectar();
-        await oracleConn.execute(
+    const conOracle = await conexionOracle.conectar();
+        await conOracle.execute(
             `INSERT INTO detalle_prestamo (Id_Prestamo, Id_Libro) VALUES (:Id_Prestamo, :Id_Libro)`,
             {
                 Id_Prestamo: Id_Prestamo,
@@ -88,7 +88,7 @@ exports.guardarDetallePrestamo = async ({ Id_Prestamo, Id_Libro }) => {
             },
             { autoCommit: true }
         );
-        await oracleConn.close();
+        await conOracle.close();
 };
 
 exports.guardarEditorial = async ({ Nombre, Id_Pais }) => {
@@ -97,11 +97,11 @@ exports.guardarEditorial = async ({ Nombre, Id_Pais }) => {
 
     await conexionMySQL.query(query, [Nombre, Id_Pais]);
 
-    const sqlConn = await conexionSQLServer.poolPromise;
-    await sqlConn.request().query(query);
+    const conSQL = await conexionSQLServer.poolPromise;
+    await conSQL.request().query(query);
 
-    const oracleConn = await conexionOracle.conectar();
-        await oracleConn.execute(
+    const conOracle = await conexionOracle.conectar();
+        await conOracle.execute(
             `INSERT INTO editorial (Nombre, Id_Pais) VALUES (:Nombre, :Id_Pais)`,
             {
                 Nombre: Nombre,
@@ -109,24 +109,24 @@ exports.guardarEditorial = async ({ Nombre, Id_Pais }) => {
             },
             { autoCommit: true }
         );
-        await oracleConn.close();
+        await conOracle.close();
 };
 
 exports.guardarEmpleado = async ({ Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Puesto, Fecha_Contratacion }) => {
 
     
-    const formattedDate = new Date(Fecha_Contratacion).toISOString().slice(0, 10);
+    const formatoFecha = new Date(Fecha_Contratacion).toISOString().slice(0, 10);
 
     const query = `INSERT INTO empleado (Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Puesto, Fecha_Contratacion) 
                    VALUES ('${Primer_Nombre}', '${Segundo_Nombre}', '${Primer_Apellido}', '${Segundo_Apellido}', '${Puesto}', '${Fecha_Contratacion}')`;
 
     await conexionMySQL.query(query, [Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Puesto, Fecha_Contratacion]);
 
-    const sqlConn = await conexionSQLServer.poolPromise;
-    await sqlConn.request().query(query);
+    const conSQL = await conexionSQLServer.poolPromise;
+    await conSQL.request().query(query);
 
-    const oracleConn = await conexionOracle.conectar();
-    await oracleConn.execute(
+    const conOracle = await conexionOracle.conectar();
+    await conOracle.execute(
         `INSERT INTO empleado (Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Puesto, Fecha_Contratacion) 
          VALUES (:Primer_Nombre, :Segundo_Nombre, :Primer_Apellido, :Segundo_Apellido, :Puesto, TO_DATE(:fechaContratacion, 'YYYY-MM-DD'))`,
         {
@@ -135,38 +135,38 @@ exports.guardarEmpleado = async ({ Primer_Nombre, Segundo_Nombre, Primer_Apellid
             Primer_Apellido: Primer_Apellido,
             Segundo_Apellido: Segundo_Apellido,
             Puesto: Puesto,
-            fechaContratacion: formattedDate
+            fechaContratacion: formatoFecha
         },
         { autoCommit: true }
     );
-    await oracleConn.close();
+    await conOracle.close();
 };
 
 exports.guardarLibro = async ({ Titulo, Fecha_Publicacion, ISBN, Id_Editorial }) => {
 
-    const formattedDate = new Date(Fecha_Publicacion).toISOString().slice(0, 10);
+    const formatoFecha = new Date(Fecha_Publicacion).toISOString().slice(0, 10);
 
     const query = `INSERT INTO libro (Titulo, Fecha_Publicacion, ISBN, Id_Editorial) 
                    VALUES ('${Titulo}', '${Fecha_Publicacion}', '${ISBN}', ${Id_Editorial})`;
 
     await conexionMySQL.query(query, [Titulo, Fecha_Publicacion, ISBN, Id_Editorial]);
 
-    const sqlConn = await conexionSQLServer.poolPromise;
-    await sqlConn.request().query(query);
+    const conSQL = await conexionSQLServer.poolPromise;
+    await conSQL.request().query(query);
 
-    const oracleConn = await conexionOracle.conectar();
-    await oracleConn.execute(
+    const conOracle = await conexionOracle.conectar();
+    await conOracle.execute(
         `INSERT INTO libro (Titulo, Fecha_Publicacion, ISBN, Id_Editorial) 
          VALUES (:Titulo, TO_DATE(:fechaPublicacion, 'YYYY-MM-DD'), :ISBN, :Id_Editorial)`,
         {
             Titulo: Titulo,
-            fechaPublicacion: formattedDate,
+            fechaPublicacion: formatoFecha,
             ISBN: ISBN,
             Id_Editorial: Id_Editorial
         },
         { autoCommit: true }
     );
-    await oracleConn.close();
+    await conOracle.close();
 };
 
 exports.guardarLibroAutor = async ({ Id_Libro, Id_Autor }) => {
@@ -176,11 +176,11 @@ exports.guardarLibroAutor = async ({ Id_Libro, Id_Autor }) => {
 
     await conexionMySQL.query(query, [Id_Libro, Id_Autor]);
 
-    const sqlConn = await conexionSQLServer.poolPromise;
-    await sqlConn.request().query(query);
+    const conSQL = await conexionSQLServer.poolPromise;
+    await conSQL.request().query(query);
 
-    const oracleConn = await conexionOracle.conectar();
-    await oracleConn.execute(
+    const conOracle = await conexionOracle.conectar();
+    await conOracle.execute(
         `INSERT INTO libro_autor (Id_Libro, Id_Autor) 
          VALUES (:Id_Libro, :Id_Autor)`,
         {
@@ -189,7 +189,7 @@ exports.guardarLibroAutor = async ({ Id_Libro, Id_Autor }) => {
         },
         { autoCommit: true }
     );
-    await oracleConn.close();
+    await conOracle.close();
 };
 
 exports.guardarLibroCategoria = async ({ Id_Libro, Id_Categoria }) => {
@@ -199,11 +199,11 @@ exports.guardarLibroCategoria = async ({ Id_Libro, Id_Categoria }) => {
 
     await conexionMySQL.query(query, [Id_Libro, Id_Categoria]);
 
-    const sqlConn = await conexionSQLServer.poolPromise;
-    await sqlConn.request().query(query);
+    const conSQL = await conexionSQLServer.poolPromise;
+    await conSQL.request().query(query);
 
-    const oracleConn = await conexionOracle.conectar();
-    await oracleConn.execute(
+    const conOracle = await conexionOracle.conectar();
+    await conOracle.execute(
         `INSERT INTO libro_categoria (Id_Libro, Id_Categoria) 
          VALUES (:Id_Libro, :Id_Categoria)`,
         {
@@ -212,23 +212,23 @@ exports.guardarLibroCategoria = async ({ Id_Libro, Id_Categoria }) => {
         },
         { autoCommit: true }
     );
-    await oracleConn.close();
+    await conOracle.close();
 };
 
 exports.guardarMiembro = async ({ Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Telefono, Fecha_Registro, Id_Municipio }) => {
 
-    const formattedDate = new Date(Fecha_Registro).toISOString().slice(0, 10);
+    const formatoFecha = new Date(Fecha_Registro).toISOString().slice(0, 10);
 
     const query = `INSERT INTO miembro (Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Telefono, Fecha_Registro, Id_Municipio) 
                    VALUES ('${Primer_Nombre}', '${Segundo_Nombre}', '${Primer_Apellido}', '${Segundo_Apellido}', '${Telefono}', '${Fecha_Registro}', ${Id_Municipio})`;
 
     await conexionMySQL.query(query, [Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Telefono, Fecha_Registro, Id_Municipio]);
 
-    const sqlConn = await conexionSQLServer.poolPromise;
-    await sqlConn.request().query(query);
+    const conSQL = await conexionSQLServer.poolPromise;
+    await conSQL.request().query(query);
 
-    const oracleConn = await conexionOracle.conectar();
-    await oracleConn.execute(
+    const conOracle = await conexionOracle.conectar();
+    await conOracle.execute(
         `INSERT INTO miembro (Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Telefono, Fecha_Registro, Id_Municipio) 
          VALUES (:Primer_Nombre, :Segundo_Nombre, :Primer_Apellido, :Segundo_Apellido, :Telefono, TO_DATE(:fechaRegistro, 'YYYY-MM-DD'), :Id_Municipio)`,
         {
@@ -237,12 +237,12 @@ exports.guardarMiembro = async ({ Primer_Nombre, Segundo_Nombre, Primer_Apellido
             Primer_Apellido: Primer_Apellido,
             Segundo_Apellido: Segundo_Apellido,
             Telefono: Telefono,
-            fechaRegistro: formattedDate,
+            fechaRegistro: formatoFecha,
             Id_Municipio: Id_Municipio
         },
         { autoCommit: true }
     );
-    await oracleConn.close();
+    await conOracle.close();
 };
 
 exports.guardarMunicipio = async ({ Nombre, Id_Departamento }) => {
@@ -252,11 +252,11 @@ exports.guardarMunicipio = async ({ Nombre, Id_Departamento }) => {
 
     await conexionMySQL.query(query, [Nombre, Id_Departamento]);
 
-    const sqlConn = await conexionSQLServer.poolPromise;
-    await sqlConn.request().query(query);
+    const conSQL = await conexionSQLServer.poolPromise;
+    await conSQL.request().query(query);
 
-    const oracleConn = await conexionOracle.conectar();
-    await oracleConn.execute(
+    const conOracle = await conexionOracle.conectar();
+    await conOracle.execute(
         `INSERT INTO municipio (Nombre, Id_Departamento) 
          VALUES (:Nombre, :Id_Departamento)`,
         {
@@ -265,7 +265,7 @@ exports.guardarMunicipio = async ({ Nombre, Id_Departamento }) => {
         },
         { autoCommit: true }
     );
-    await oracleConn.close();
+    await conOracle.close();
 };
 
 exports.guardarPais = async ({ Nombre }) => {
@@ -275,11 +275,11 @@ exports.guardarPais = async ({ Nombre }) => {
 
     await conexionMySQL.query(query, [Nombre]);
 
-    const sqlConn = await conexionSQLServer.poolPromise;
-    await sqlConn.request().query(query);
+    const conSQL = await conexionSQLServer.poolPromise;
+    await conSQL.request().query(query);
 
-    const oracleConn = await conexionOracle.conectar();
-    await oracleConn.execute(
+    const conOracle = await conexionOracle.conectar();
+    await conOracle.execute(
         `INSERT INTO pais (Nombre) 
          VALUES (:Nombre)`,
         {
@@ -287,33 +287,33 @@ exports.guardarPais = async ({ Nombre }) => {
         },
         { autoCommit: true }
     );
-    await oracleConn.close();
+    await conOracle.close();
 };
 
 exports.guardarPrestamo = async ({ Id_Miembro, Id_Empleado, Fecha_Prestamo, Fecha_Devolucion }) => {
 
-    const formattedDate1 = new Date(Fecha_Prestamo).toISOString().slice(0, 10);
-    const formattedDate2 = new Date(Fecha_Devolucion).toISOString().slice(0, 10);
+    const formatoFecha1 = new Date(Fecha_Prestamo).toISOString().slice(0, 10);
+    const formatoFecha2 = new Date(Fecha_Devolucion).toISOString().slice(0, 10);
     
     const query = `INSERT INTO prestamo (Id_Miembro, Id_Empleado, Fecha_Prestamo, Fecha_Devolucion) 
                    VALUES (${Id_Miembro}, ${Id_Empleado}, '${Fecha_Prestamo}', '${Fecha_Devolucion}')`;
 
     await conexionMySQL.query(query, [Id_Miembro, Id_Empleado, Fecha_Prestamo, Fecha_Devolucion]);
 
-    const sqlConn = await conexionSQLServer.poolPromise;
-    await sqlConn.request().query(query);
+    const conSQL = await conexionSQLServer.poolPromise;
+    await conSQL.request().query(query);
 
-    const oracleConn = await conexionOracle.conectar();
-    await oracleConn.execute(
+    const conOracle = await conexionOracle.conectar();
+    await conOracle.execute(
         `INSERT INTO prestamo (Id_Miembro, Id_Empleado, Fecha_Prestamo, Fecha_Devolucion) 
          VALUES (:Id_Miembro, :Id_Empleado, TO_DATE(:fechaPrestamo, 'YYYY-MM-DD'), TO_DATE(:fechaDevolucion, 'YYYY-MM-DD'))`,
         {
             Id_Miembro: Id_Miembro,
             Id_Empleado: Id_Empleado,
-            fechaPrestamo: formattedDate1,
-            fechaDevolucion: formattedDate2
+            fechaPrestamo: formatoFecha1,
+            fechaDevolucion: formatoFecha2
         },
         { autoCommit: true }
     );
-    await oracleConn.close();
+    await conOracle.close();
 };

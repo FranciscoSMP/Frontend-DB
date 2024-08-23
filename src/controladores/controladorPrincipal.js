@@ -1,184 +1,213 @@
 const modeloBiblioteca = require('../modelos/modeloBiblioteca');
 
-// Función para renderizar vistas
-// Devuelve una función que renderiza la vista especificada
-exports.renderVista = (vista) => (req, res) => {
-    res.render(vista);
+exports.inicio = (req, res) => {
+    res.render('inicio');
 };
 
-// Rutas para renderizar vistas
-// Asocia rutas específicas con vistas correspondientes
-exports.inicio = exports.renderVista('Inicio');
-exports.autor = exports.renderVista('Autor');
-exports.categoria = exports.renderVista('Categoria');
-exports.departamento = exports.renderVista('Departamento');
-exports.detalle_prestamo = exports.renderVista('DetallePrestamo');
-exports.editorial = exports.renderVista('Editorial');
-exports.empleado = exports.renderVista('Empleado');
-exports.libro = exports.renderVista('Libro');
-exports.libro_autor = exports.renderVista('LibroAutor');
-exports.libro_categoria = exports.renderVista('LibroCategoria');
-exports.miembro = exports.renderVista('Miembro');
-exports.municipio = exports.renderVista('Municipio');
-exports.pais = exports.renderVista('Pais');
-exports.prestamo = exports.renderVista('Prestamo');
-
-// Mapa de modelos y rutas para el guardado
-// Asocia cada tipo de registro con su modelo de guardado y ruta de redirección
-const modelos = {
-    autor: modeloBiblioteca.guardarAutor,
-    categoria: modeloBiblioteca.guardarCategoria,
-    departamento: modeloBiblioteca.guardarDepartamento,
-    detalle_prestamo: modeloBiblioteca.guardarDetallePrestamo,
-    editorial: modeloBiblioteca.guardarEditorial,
-    empleado: modeloBiblioteca.guardarEmpleado,
-    libro: modeloBiblioteca.guardarLibro,
-    libro_autor: modeloBiblioteca.guardarLibroAutor,
-    libro_categoria: modeloBiblioteca.guardarLibroCategoria,
-    miembro: modeloBiblioteca.guardarMiembro,
-    municipio: modeloBiblioteca.guardarMunicipio,
-    pais: modeloBiblioteca.guardarPais,
-    prestamo: modeloBiblioteca.guardarPrestamo
+exports.autor = (req, res) => {
+    res.render('Autor');
 };
 
-// Rutas para redirección después de guardar
-const rutas = {
-    autor: '/tabla/Autor',
-    categoria: '/tabla/categoria',
-    departamento: '/tabla/departamento',
-    detalle_prestamo: '/tabla/detalle_prestamo',
-    editorial: '/tabla/editorial',
-    empleado: '/tabla/empleado',
-    libro: '/tabla/libro',
-    libro_autor: '/tabla/libro_autor',
-    libro_categoria: '/tabla/libro_categoria',
-    miembro: '/tabla/miembro',
-    municipio: '/tabla/municipio',
-    pais: '/tabla/pais',
-    prestamo: '/tabla/prestamo'
+exports.categoria = (req, res) => {
+    res.render('Categoria');
 };
 
-// Mensajes de error personalizados para cada tipo de registro
-const mensajesError = {
-    autor: 'Error al guardar el autor',
-    categoria: 'Error al guardar la categoría',
-    departamento: 'Error al guardar el departamento',
-    detalle_prestamo: 'Error al guardar el detalle del préstamo',
-    editorial: 'Error al guardar la editorial',
-    empleado: 'Error al guardar el empleado',
-    libro: 'Error al guardar el libro',
-    libro_autor: 'Error al guardar la relación libro-autor',
-    libro_categoria: 'Error al guardar la relación libro-categoría',
-    miembro: 'Error al guardar el miembro',
-    municipio: 'Error al guardar el municipio',
-    pais: 'Error al guardar el país',
-    prestamo: 'Error al guardar el préstamo'
+exports.departamento = (req, res) => {
+    res.render('Departamento');
 };
 
-// Función genérica para guardar registros
-// Guarda el registro en la base de datos y maneja errores
-async function guardarRegistro(tipo, datos, res) {
+exports.detalle_prestamo = (req, res) => {
+    res.render('DetallePrestamo');
+};
+
+exports.editorial = (req, res) => {
+    res.render('Editorial');
+};
+
+exports.empleado = (req, res) => {
+    res.render('Empleado');
+};
+
+exports.libro = (req, res) => {
+    res.render('Libro');
+};
+
+exports.libro_autor = (req, res) => {
+    res.render('LibroAutor');
+};
+
+exports.libro_categoria = (req, res) => {
+    res.render('LibroCategoria');
+};
+
+exports.miembro = (req, res) => {
+    res.render('Miembro');
+};
+
+exports.municipio = (req, res) => {
+    res.render('Municipio');
+};
+
+exports.pais = (req, res) => {
+    res.render('Pais');
+};
+
+exports.prestamo = (req, res) => {
+    res.render('Prestamo');
+};
+
+exports.guardarAutor = async (req, res) => {
+    const { Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Id_Pais } = req.body;
+
     try {
-        await modelos[tipo](datos);  // Llama al modelo correspondiente para guardar los datos
-        res.redirect(rutas[tipo]);   // Redirige a la ruta correspondiente si el guardado es exitoso
+        await modeloBiblioteca.guardarAutor({ Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Id_Pais });
+        res.redirect('/tabla/Autor');
     } catch (error) {
-        console.error(error);        // Imprime el error en la consola para depuración
-        res.status(500).send(mensajesError[tipo]);  // Envía un mensaje de error al cliente
+        console.error(error);
+        res.status(500).send('Error al guardar el autor');
     }
-}
-
-// Función para obtener datos del cuerpo de la solicitud
-// Extrae los campos específicos del cuerpo de la solicitud basándose en el tipo de registro
-const obtenerDatos = (tipo, body) => {
-    // Define los campos requeridos para cada tipo de registro
-    const datos = {
-        autor: ['Primer_Nombre', 'Segundo_Nombre', 'Primer_Apellido', 'Segundo_Apellido', 'Id_Pais'],
-        categoria: ['Nombre'],
-        departamento: ['Nombre', 'Id_Pais'],
-        detalle_prestamo: ['Id_Prestamo', 'Id_Libro'],
-        editorial: ['Nombre', 'Id_Pais'],
-        empleado: ['Primer_Nombre', 'Segundo_Nombre', 'Primer_Apellido', 'Segundo_Apellido', 'Puesto', 'Fecha_Contratacion'],
-        libro: ['Titulo', 'Fecha_Publicacion', 'ISBN', 'Id_Editorial'],
-        libro_autor: ['Id_Libro', 'Id_Autor'],
-        libro_categoria: ['Id_Libro', 'Id_Categoria'],
-        miembro: ['Primer_Nombre', 'Segundo_Nombre', 'Primer_Apellido', 'Segundo_Apellido', 'Telefono', 'Fecha_Registro', 'Id_Municipio'],
-        municipio: ['Nombre', 'Id_Departamento'],
-        pais: ['Nombre'],
-        prestamo: ['Id_Miembro', 'Id_Empleado', 'Fecha_Prestamo', 'Fecha_Devolucion']
-    };
-
-    // Extrae los datos del cuerpo de la solicitud basándose en los campos definidos
-    return datos[tipo].reduce((acc, campo) => {
-        if (body[campo] !== undefined) {
-            acc[campo] = body[campo];
-        }
-        return acc;
-    }, {});
 };
 
-// Funciones para guardar registros específicos
-// Llaman a la función genérica `guardarRegistro` con los datos extraídos
-exports.guardarAutor = (req, res) => {
-    const datos = obtenerDatos('autor', req.body);
-    guardarRegistro('autor', datos, res);
+exports.guardarCategoria= async (req, res) => {
+    const { Nombre } = req.body;
+
+    try {
+        await modeloBiblioteca.guardarCategoria({ Nombre });
+        res.redirect('/tabla/categoria');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al guardar la categoria');
+    }
 };
 
-exports.guardarCategoria = (req, res) => {
-    const datos = obtenerDatos('categoria', req.body);
-    guardarRegistro('categoria', datos, res);
+exports.guardarDepartamento= async (req, res) => {
+    const { Nombre, Id_Pais } = req.body;
+
+    try {
+        await modeloBiblioteca.guardarDepartamento({ Nombre, Id_Pais });
+        res.redirect('/tabla/departamento');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al guardar el departamento');
+    }
 };
 
-exports.guardarDepartamento = (req, res) => {
-    const datos = obtenerDatos('departamento', req.body);
-    guardarRegistro('departamento', datos, res);
+exports.guardarDetallePrestamo= async (req, res) => {
+    const { Id_Prestamo, Id_Libro } = req.body;
+
+    try {
+        await modeloBiblioteca.guardarDetallePrestamo({ Id_Prestamo, Id_Libro });
+        res.redirect('/tabla/detalle_prestamo');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al guardar el detalle prestamo');
+    }
 };
 
-exports.guardarDetallePrestamo = (req, res) => {
-    const datos = obtenerDatos('detalle_prestamo', req.body);
-    guardarRegistro('detalle_prestamo', datos, res);
+exports.guardarEditorial = async (req, res) => {
+    const { Nombre, Id_Pais } = req.body;
+
+    try {
+        await modeloBiblioteca.guardarEditorial({ Nombre, Id_Pais });
+        res.redirect('/tabla/editorial');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al guardar la editorial');
+    }
 };
 
-exports.guardarEditorial = (req, res) => {
-    const datos = obtenerDatos('editorial', req.body);
-    guardarRegistro('editorial', datos, res);
+exports.guardarEmpleado = async (req, res) => {
+    const { Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Puesto, Fecha_Contratacion } = req.body;
+
+    try {
+        await modeloBiblioteca.guardarEmpleado({ Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Puesto, Fecha_Contratacion });
+        res.redirect('/tabla/empleado');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al guardar el empleado');
+    }
 };
 
-exports.guardarEmpleado = (req, res) => {
-    const datos = obtenerDatos('empleado', req.body);
-    guardarRegistro('empleado', datos, res);
+exports.guardarLibro = async (req, res) => {
+    const { Titulo, Fecha_Publicacion, ISBN, Id_Editorial } = req.body;
+
+    try {
+        await modeloBiblioteca.guardarLibro({ Titulo, Fecha_Publicacion, ISBN, Id_Editorial });
+        res.redirect('/tabla/libro');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al guardar el libro');
+    }
 };
 
-exports.guardarLibro = (req, res) => {
-    const datos = obtenerDatos('libro', req.body);
-    guardarRegistro('libro', datos, res);
+exports.guardarLibroAutor = async (req, res) => {
+    const { Id_Libro, Id_Autor } = req.body;
+
+    try {
+        await modeloBiblioteca.guardarLibroAutor({ Id_Libro, Id_Autor });
+        res.redirect('/tabla/libro_autor');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al guardar el libro_autor');
+    }
 };
 
-exports.guardarLibroAutor = (req, res) => {
-    const datos = obtenerDatos('libro_autor', req.body);
-    guardarRegistro('libro_autor', datos, res);
+exports.guardarLibroCategoria = async (req, res) => {
+    const { Id_Libro, Id_Categoria } = req.body;
+
+    try {
+        await modeloBiblioteca.guardarLibroCategoria({ Id_Libro, Id_Categoria });
+        res.redirect('/tabla/libro_categoria');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al guardar el libro_categoria');
+    }
 };
 
-exports.guardarLibroCategoria = (req, res) => {
-    const datos = obtenerDatos('libro_categoria', req.body);
-    guardarRegistro('libro_categoria', datos, res);
+exports.guardarMiembro = async (req, res) => {
+    const { Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Telefono, Fecha_Registro, Id_Municipio } = req.body;
+
+    try {
+        await modeloBiblioteca.guardarMiembro({ Primer_Nombre, Segundo_Nombre, Primer_Apellido, Segundo_Apellido, Telefono, Fecha_Registro, Id_Municipio });
+        res.redirect('/tabla/miembro');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al guardar el miembro');
+    }
 };
 
-exports.guardarMiembro = (req, res) => {
-    const datos = obtenerDatos('miembro', req.body);
-    guardarRegistro('miembro', datos, res);
+exports.guardarMunicipio = async (req, res) => {
+    const { Nombre, Id_Departamento } = req.body;
+
+    try {
+        await modeloBiblioteca.guardarMunicipio({ Nombre, Id_Departamento });
+        res.redirect('/tabla/municipio');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al guardar el municipio');
+    }
 };
 
-exports.guardarMunicipio = (req, res) => {
-    const datos = obtenerDatos('municipio', req.body);
-    guardarRegistro('municipio', datos, res);
+exports.guardarPais = async (req, res) => {
+    const { Nombre } = req.body;
+
+    try {
+        await modeloBiblioteca.guardarPais({ Nombre });
+        res.redirect('/tabla/pais');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al guardar el pais');
+    }
 };
 
-exports.guardarPais = (req, res) => {
-    const datos = obtenerDatos('pais', req.body);
-    guardarRegistro('pais', datos, res);
-};
+exports.guardarPrestamo = async (req, res) => {
+    const { Id_Miembro, Id_Empleado, Fecha_Prestamo, Fecha_Devolucion } = req.body;
 
-exports.guardarPrestamo = (req, res) => {
-    const datos = obtenerDatos('prestamo', req.body);
-    guardarRegistro('prestamo', datos, res);
+    try {
+        await modeloBiblioteca.guardarPrestamo({ Id_Miembro, Id_Empleado, Fecha_Prestamo, Fecha_Devolucion });
+        res.redirect('/tabla/prestamo');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error al guardar el prestamo');
+    }
 };
