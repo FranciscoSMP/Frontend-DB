@@ -1,51 +1,101 @@
+/* Estilos generales */
 body {
-    font-family: 'Arial', sans-serif;
-    background-color:rgba(153, 205, 50, 0.150);
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+h1, h2 {
+    font-weight: bold;
+    color: #006400;
 }
 
 h2 {
-    font-weight: bold;
+    font-size: 1.5rem;
     text-transform: uppercase;
 }
 
 .menu ul {
     padding: 0;
+    list-style: none;
 }
 
 .menu ul li {
-    margin: 10px 0;
+    margin: 0 10px;
 }
 
+.nav-link {
+    font-weight: 500;
+    color: #555;
+    transition: color 0.3s;
+}
+
+.nav-link:hover {
+    color: #006400;
+    text-decoration: none;
+}
+
+.container {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.bg-custom {
+    background-color: #99cd32;
+    opacity: 0.9;
+}
+
+.text-custom {
+    color: #006400;
+    font-size: 2rem;
+}
+
+/* Listas */
 .list-group-item {
     background-color: #f8f9fa;
     transition: background-color 0.3s;
 }
 
 .list-group-item:hover {
-    background-color:rgb(235, 235, 235);
+    background-color: rgb(235, 235, 235);
     cursor: pointer;
 }
 
-.bg-custom {
-    background-color:rgba(153, 205, 50, 0.100);
-}
-
-.text-custom {
-    color:rgb(0, 100, 0);
-}
-
+/* Formularios */
 form {
-    background-color: #f9f9f9;
+    background-color: #ffffff;
     border: 1px solid #ddd;
-    box-shadow: 0 4px 8px rgb(0, 0, 0.1);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
 }
 
-form .form-control {
+form:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.form-control {
     border-radius: 0.25rem;
+    border: 1px solid #ccc;
+    box-shadow: none;
+    transition: border-color 0.3s ease-in-out;
 }
 
-form .btn {
-    border-radius: 0.45rem;
+.form-control:focus {
+    border-color: #28a745;
+    box-shadow: none;
+}
+
+/* Botones */
+.btn {
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+    transition: background-color 0.3s ease-in-out;
 }
 
 .btn-success {
@@ -68,8 +118,14 @@ form .btn {
     border-color: #545b62;
 }
 
-.form-control {
-    border: 0.25px solid #bbbaba;
-    box-shadow: none;
-    transition: border-color 0.3s ease-in-out;
+/* Footer */
+footer {
+    background-color: #99cd32;
+    opacity: 0.9;
+}
+
+footer p {
+    color: #ffffff;
+    font-size: 0.9rem;
+    margin: 0;
 }
