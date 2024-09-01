@@ -8,7 +8,7 @@ module.exports = {
     oracle: {
         user: 'BIBLIOTECA',
         password: 'r62af79a',
-        connectString: '192.168.0.17/XE'
+        connectString: 'localhost/XE'
     },
     sqlserver: {
         user: 'sa',
